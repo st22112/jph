@@ -47,7 +47,7 @@ root.resizable(False,False)
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
-mainframe = ttk.Frame(root, padding="3 3 3 3", borderwidth=2, relief="solid")
+mainframe = ttk.Frame(root, padding="3 3 3 3")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
@@ -71,9 +71,9 @@ itemframe.bind("<Configure>", lambda event: updateCanvas(itemframeID))
 itemcanvas.bind("<Enter>", lambda event: bindToCanvas())
 itemcanvas.bind("<Leave>", lambda event: unbindToCanvas())
 
-add = ttk.Label(mainframe, text="Add item", borderwidth=2, padding="10 10 10 10",
-				relief="solid", anchor="center")
-add.grid(row=1, column=0, sticky=EW, columnspan=2, pady=3)
+add = ttk.Label(mainframe, text="Add item", borderwidth=2, relief="solid",
+				padding="10 10 10 10", anchor="center")
+add.grid(row=1, column=0, sticky=EW, columnspan=2, padx=3, pady=3)
 add.bind("<Button-1>", lambda event: addItem())
 
 for i in range(100):
