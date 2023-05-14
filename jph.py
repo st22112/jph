@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import ttk
 from sys import platform
 
+# scrolling
+
 def updateCanvas(itemframeID):
 	itemcanvas["scrollregion"] = itemcanvas.bbox("all")
 	itemcanvas.itemconfigure(itemframeID, width=itemcanvas.winfo_width()-3)
@@ -35,6 +37,10 @@ def unbindToCanvas(*args):
 	else:
 		root.unbind_all("<MouseWheel>")
 
+
+def addItem():
+	print("TODO")
+
 root = Tk()
 root.geometry('700x700')
 root.resizable(False,False)
@@ -64,6 +70,11 @@ itemcanvas.bind("<Configure>", lambda event: updateCanvas(itemframeID))
 itemframe.bind("<Configure>", lambda event: updateCanvas(itemframeID))
 itemcanvas.bind("<Enter>", lambda event: bindToCanvas())
 itemcanvas.bind("<Leave>", lambda event: unbindToCanvas())
+
+add = ttk.Label(mainframe, text="Add item", borderwidth=2, padding="10 10 10 10",
+				relief="solid", anchor="center")
+add.grid(row=1, column=0, sticky=EW, columnspan=2, pady=3)
+add.bind("<Button-1>", lambda event: addItem())
 
 for i in range(100):
 	ttk.Label(itemframe, text="test").grid(column=0, row=i)
