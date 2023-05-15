@@ -37,6 +37,30 @@ def unbindToCanvas(*args):
 	else:
 		root.unbind_all("<MouseWheel>")
 
+# frame management
+
+def mkframe():
+	itemlist.append([])
+	frameID = next(i for i, e in enumerate(sorted(itemID) + [ None ], 0) if i != e)
+	itemID.append(frameID)
+	itemlist[-1].append(ttk.Frame(itemframe, padding="3 3 3 3", borderwidth=2,
+							   relief="solid"))
+	itemlist[-1][0].grid(column=0, row = len(itemlist)-1, sticky=EW, padx=3, pady=3)
+	itemlist[-1][0].bind("<Button-1>", lambda event: rmframe(frameID))
+
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="test"))
+	itemlist[-1][1].grid(column=0, row=0)
+	itemlist[-1][1].bind("<Button-1>", lambda event: rmframe(frameID))
+
+def rmframe(frameID):
+	i = itemID.index(frameID)
+	itemlist[i][0].destroy()
+	del itemlist[i]
+	del itemID[i]
+	# del itemdata[i]
+	if i < len(itemID):
+		for i in range(i, len(itemID)):
+			itemlist[i][0].grid(row = i)
 
 def addItem():
 	print("TODO")
@@ -76,7 +100,12 @@ add = ttk.Label(mainframe, text="Add item", borderwidth=2, relief="solid",
 add.grid(row=1, column=0, sticky=EW, columnspan=2, padx=3, pady=3)
 add.bind("<Button-1>", lambda event: addItem())
 
+itemlist = []
+itemID = []
+itemdata = []
+
 for i in range(100):
-	ttk.Label(itemframe, text="test").grid(column=0, row=i)
+	#ttk.Label(itemframe, text="test").grid(column=0, row=i)
+	mkframe()
 
 root.mainloop()
