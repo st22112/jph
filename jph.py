@@ -71,6 +71,9 @@ itemframe.bind("<Configure>", lambda event: updateCanvas(itemframeID))
 itemcanvas.bind("<Enter>", lambda event: bindToCanvas())
 itemcanvas.bind("<Leave>", lambda event: unbindToCanvas())
 
+items = []
+itemdata = []
+
 add = ttk.Label(mainframe, text="Add item", borderwidth=2, relief="solid",
 				padding="10 10 10 10", anchor="center")
 add.grid(row=1, column=0, sticky=EW, columnspan=2, padx=3, pady=3)
