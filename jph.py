@@ -64,6 +64,7 @@ def rmframe(frameID):
 
 def addItem():
 	print("TODO")
+	mkframe()
 
 root = Tk()
 root.geometry('700x700')
