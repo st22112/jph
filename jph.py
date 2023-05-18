@@ -48,9 +48,22 @@ def mkframe():
 	itemlist[-1][0].grid(column=0, row = len(itemlist)-1, sticky=EW, padx=3, pady=3)
 	itemlist[-1][0].bind("<Button-1>", lambda event: rmframe(frameID))
 
-	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="test"))
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="John"))
 	itemlist[-1][1].grid(column=0, row=0)
-	itemlist[-1][1].bind("<Button-1>", lambda event: rmframe(frameID))
+
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="12345"))
+	itemlist[-1][2].grid(column=1, row=0)
+
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="Beans"))
+	itemlist[-1][3].grid(column=2, row=0)
+
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="486"))
+	itemlist[-1][4].grid(column=3, row=0)
+
+	itemlist[-1][0].columnconfigure(0, weight=1, uniform="a")
+	itemlist[-1][0].columnconfigure(1, weight=1, uniform="a")
+	itemlist[-1][0].columnconfigure(2, weight=1, uniform="a")
+	itemlist[-1][0].columnconfigure(3, weight=1, uniform="a")
 
 def rmframe(frameID):
 	i = itemID.index(frameID)
