@@ -75,10 +75,27 @@ root.rowconfigure(0, weight=1)
 mainframe = ttk.Frame(root, padding="3 3 3 3")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
-mainframe.rowconfigure(0, weight=1)
+mainframe.rowconfigure(0, weight=0)
+mainframe.rowconfigure(1, weight=1)
+mainframe.rowconfigure(2, weight=0)
+
+sort = ttk.Frame(mainframe, borderwidth=2, relief="solid")
+sort.grid(column=0, row=0, sticky=EW, padx=6)
+sortName = ttk.Label(sort, text="Name")
+sortReceipt = ttk.Label(sort, text="Receipt")
+sortItem = ttk.Label(sort, text="Item")
+sortItemNum = ttk.Label(sort, text="Number of items")
+sortName.grid(column=0, row=0)
+sortItem.grid(column=2, row=0)
+sortReceipt.grid(column=1, row=0)
+sortItemNum.grid(column=3, row=0)
+sort.columnconfigure(0, weight=1, uniform="a")
+sort.columnconfigure(1, weight=1, uniform="a")
+sort.columnconfigure(2, weight=1, uniform="a")
+sort.columnconfigure(3, weight=1, uniform="a")
 
 itemcanvas = Canvas(mainframe, highlightthickness=0)
-itemcanvas.grid(column=0, row=0, sticky=(N, W, E, S), padx=3, pady=3)
+itemcanvas.grid(column=0, row=1, sticky=(N, W, E, S), padx=3, pady=3)
 itemcanvas.columnconfigure(0, weight=1)
 itemcanvas.rowconfigure(0, weight=0)
 
@@ -89,7 +106,7 @@ itemframeID = itemcanvas.create_window((0, 0), window=itemframe, anchor=NW)
 
 scrollbar = ttk.Scrollbar(mainframe, orient='vertical',
 						  command=scrollCanvas)
-scrollbar.grid(row=0, column=1, sticky=NS)
+scrollbar.grid(row=0, column=1, sticky=NS, rowspan=2)
 itemcanvas['yscrollcommand'] = scrollbar.set
 itemcanvas.bind("<Configure>", lambda event: updateCanvas(itemframeID))
 itemframe.bind("<Configure>", lambda event: updateCanvas(itemframeID))
@@ -98,7 +115,7 @@ itemcanvas.bind("<Leave>", lambda event: unbindToCanvas())
 
 add = ttk.Label(mainframe, text="Add item", borderwidth=2, relief="solid",
 				padding="10 10 10 10", anchor="center")
-add.grid(row=1, column=0, sticky=EW, columnspan=2, padx=3, pady=3)
+add.grid(row=2, column=0, sticky=EW, columnspan=2, padx=3, pady=3)
 add.bind("<Button-1>", lambda event: addItem())
 
 itemlist = []
@@ -106,7 +123,6 @@ itemID = []
 itemdata = []
 
 for i in range(100):
-	#ttk.Label(itemframe, text="test").grid(column=0, row=i)
 	mkframe()
 
 root.mainloop()
