@@ -48,16 +48,17 @@ def mkframe():
 	itemlist[-1][0].grid(column=0, row = len(itemlist)-1, sticky=EW, padx=3, pady=3)
 	itemlist[-1][0].bind("<Button-1>", lambda event: rmframe(frameID))
 
-	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="Name"))
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], textvariable=itemdata[-1][0]))
+
 	itemlist[-1][1].grid(column=0, row=0)
 
-	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="Receipt"))
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], textvariable=itemdata[-1][1]))
 	itemlist[-1][2].grid(column=1, row=0)
 
-	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="Item"))
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], textvariable=itemdata[-1][2]))
 	itemlist[-1][3].grid(column=2, row=0)
 
-	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="Number of Items"))
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], textvariable=itemdata[-1][3]))
 	itemlist[-1][4].grid(column=3, row=0)
 
 	itemlist[-1][0].columnconfigure(0, weight=1, uniform="a")
@@ -77,6 +78,15 @@ def rmframe(frameID):
 
 def addItem():
 	print("TODO")
+	itemdata.append([])
+	itemdata[-1].append(StringVar())
+	itemdata[-1].append(StringVar())
+	itemdata[-1].append(StringVar())
+	itemdata[-1].append(StringVar())
+	itemdata[-1][0].set("name")
+	itemdata[-1][1].set("1234")
+	itemdata[-1][2].set("test")
+	itemdata[-1][3].set("42")
 	mkframe()
 
 root = Tk()
@@ -138,8 +148,5 @@ add.bind("<Button-1>", lambda event: addItem())
 itemlist = []
 itemID = []
 itemdata = []
-
-for i in range(10):
-	mkframe()
 
 root.mainloop()
