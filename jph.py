@@ -71,7 +71,7 @@ def rmframe(frameID):
 	itemlist[i][0].destroy()
 	del itemlist[i]
 	del itemID[i]
-	# del itemdata[i]
+	del itemdata[i]
 	if i < len(itemID):
 		for i in range(i, len(itemID)):
 			itemlist[i][0].grid(row = i)
