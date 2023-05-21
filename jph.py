@@ -48,16 +48,16 @@ def mkframe():
 	itemlist[-1][0].grid(column=0, row = len(itemlist)-1, sticky=EW, padx=3, pady=3)
 	itemlist[-1][0].bind("<Button-1>", lambda event: rmframe(frameID))
 
-	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="John"))
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="Name"))
 	itemlist[-1][1].grid(column=0, row=0)
 
-	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="12345"))
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="Receipt"))
 	itemlist[-1][2].grid(column=1, row=0)
 
-	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="Beans"))
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="Item"))
 	itemlist[-1][3].grid(column=2, row=0)
 
-	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="486"))
+	itemlist[-1].append(ttk.Label(itemlist[-1][0], text="Number of Items"))
 	itemlist[-1][4].grid(column=3, row=0)
 
 	itemlist[-1][0].columnconfigure(0, weight=1, uniform="a")
@@ -85,6 +85,10 @@ root.resizable(False,False)
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
+s = ttk.Style()
+s.configure("red.TFrame", background="red")
+
+
 mainframe = ttk.Frame(root, padding="3 3 3 3")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
@@ -107,12 +111,12 @@ sort.columnconfigure(1, weight=1, uniform="a")
 sort.columnconfigure(2, weight=1, uniform="a")
 sort.columnconfigure(3, weight=1, uniform="a")
 
-itemcanvas = Canvas(mainframe, highlightthickness=0)
+itemcanvas = Canvas(mainframe, highlightthickness=0, bg='blue')
 itemcanvas.grid(column=0, row=1, sticky=(N, W, E, S), padx=3, pady=3)
 itemcanvas.columnconfigure(0, weight=1)
 itemcanvas.rowconfigure(0, weight=0)
 
-itemframe = ttk.Frame(itemcanvas)
+itemframe = ttk.Frame(itemcanvas, style="red.TFrame")
 itemframe.columnconfigure(0, weight=1)
 itemframe.rowconfigure(0, weight=0)
 itemframeID = itemcanvas.create_window((0, 0), window=itemframe, anchor=NW)
@@ -135,7 +139,7 @@ itemlist = []
 itemID = []
 itemdata = []
 
-for i in range(100):
+for i in range(10):
 	mkframe()
 
 root.mainloop()
