@@ -6,7 +6,7 @@ from sys import platform
 
 def updateCanvas(itemframeID):
 	itemcanvas["scrollregion"] = itemcanvas.bbox("all")
-	itemcanvas.itemconfigure(itemframeID, width=itemcanvas.winfo_width()-3)
+	itemcanvas.itemconfigure(itemframeID, width=itemcanvas.winfo_width())
 
 def scrollCanvas(*args):
 	if itemcanvas.yview() == (0.0, 1.0):
@@ -96,27 +96,27 @@ mainframe.rowconfigure(0, weight=0)
 mainframe.rowconfigure(1, weight=1)
 mainframe.rowconfigure(2, weight=0)
 
-sort = ttk.Frame(mainframe, borderwidth=2, relief="solid")
+sort = ttk.Frame(mainframe, padding="3 3 3 3", borderwidth=2, relief="solid")
 sort.grid(column=0, row=0, sticky=EW, padx=6)
 sortName = ttk.Label(sort, text="Name")
 sortReceipt = ttk.Label(sort, text="Receipt")
 sortItem = ttk.Label(sort, text="Item")
-sortItemNum = ttk.Label(sort, text="Number of items")
+sortItemNum = ttk.Label(sort, text="Number of Items")
 sortName.grid(column=0, row=0)
 sortItem.grid(column=2, row=0)
 sortReceipt.grid(column=1, row=0)
 sortItemNum.grid(column=3, row=0)
-sort.columnconfigure(0, weight=1, uniform="a")
-sort.columnconfigure(1, weight=1, uniform="a")
-sort.columnconfigure(2, weight=1, uniform="a")
-sort.columnconfigure(3, weight=1, uniform="a")
+sort.columnconfigure(0, weight=1, uniform="b")
+sort.columnconfigure(1, weight=1, uniform="b")
+sort.columnconfigure(2, weight=1, uniform="b")
+sort.columnconfigure(3, weight=1, uniform="b")
 
-itemcanvas = Canvas(mainframe, highlightthickness=0, bg='blue')
+itemcanvas = Canvas(mainframe, highlightthickness=0)
 itemcanvas.grid(column=0, row=1, sticky=(N, W, E, S), padx=3, pady=3)
 itemcanvas.columnconfigure(0, weight=1)
 itemcanvas.rowconfigure(0, weight=0)
 
-itemframe = ttk.Frame(itemcanvas, style="red.TFrame")
+itemframe = ttk.Frame(itemcanvas)
 itemframe.columnconfigure(0, weight=1)
 itemframe.rowconfigure(0, weight=0)
 itemframeID = itemcanvas.create_window((0, 0), window=itemframe, anchor=NW)
