@@ -4,15 +4,18 @@ from sys import platform
 
 
 # scrolling
+# update itemcanvas scroll region when itemcanvas or itemframe changes size
 def updateCanvas(itemFrameID):
 	itemCanvas["scrollregion"] = itemCanvas.bbox("all")
 	itemCanvas.itemconfigure(itemFrameID, width=itemCanvas.winfo_width())
 
+# scoll itemcanvas only when itemframe is bigger than canvas
 def scrollCanvas(*args):
 	if itemCanvas.yview() == (0.0, 1.0):
 		return
 	itemCanvas.yview(*args)
 
+# control scrollwheel scrolling
 def mousewheelCanvas(event, scroll=None):
 	if itemCanvas.yview() == (0.0, 1.0):
 		return
@@ -23,6 +26,7 @@ def mousewheelCanvas(event, scroll=None):
 	else:
 		itemCanvas.yview_scroll(-1*event.delta, "units")
 
+# bind scrollwheel to scroll itemcanvas
 def bindToCanvas(*args):
 	if platform == "linux" or platform == "linux2":
 		root.bind_all("<Button-4>", lambda event: mousewheelCanvas(event, -1))
@@ -30,6 +34,7 @@ def bindToCanvas(*args):
 	else:
 		root.bind_all("<MouseWheel>", lambda event: mousewheelCanvas(event))
 	
+# unbind scrollwheel to scroll itemcanvas
 def unbindToCanvas(*args):
 	if platform == "linux" or platform == "linux2":
 		root.unbind_all("<Button-4>")
@@ -39,17 +44,17 @@ def unbindToCanvas(*args):
 
 
 # frame management
+# add frame for item
 def mkframe():
 	itemList.append([])
-	frameID = next(i for i, e in enumerate(sorted(itemID) + [ None ], 0) if i != e)
+	frameID = next(i for i, e in enumerate(sorted(itemID) + [None], 0) if i!=e)
 	itemID.append(frameID)
 	itemList[-1].append(ttk.Frame(itemFrame, padding="3 3 3 3", borderwidth=2,
 							   relief="solid"))
-	itemList[-1][0].grid(column=0, row = len(itemList)-1, sticky=EW, padx=3, pady=3)
+	itemList[-1][0].grid(column=0, row=len(itemList)-1, sticky=EW, padx=3, pady=3)
 	itemList[-1][0].bind("<Button-1>", lambda event: rmframe(frameID))
 
 	itemList[-1].append(ttk.Label(itemList[-1][0], textvariable=itemData[-2][0]))
-
 	itemList[-1][1].grid(column=0, row=0)
 
 	itemList[-1].append(ttk.Label(itemList[-1][0], textvariable=itemData[-2][1]))
@@ -61,11 +66,9 @@ def mkframe():
 	itemList[-1].append(ttk.Label(itemList[-1][0], textvariable=itemData[-2][3]))
 	itemList[-1][4].grid(column=3, row=0)
 
-	itemList[-1][0].columnconfigure(0, weight=1, uniform="item")
-	itemList[-1][0].columnconfigure(1, weight=1, uniform="item")
-	itemList[-1][0].columnconfigure(2, weight=1, uniform="item")
-	itemList[-1][0].columnconfigure(3, weight=1, uniform="item")
+	itemList[-1][0].columnconfigure((0, 1, 2, 3), weight=1, uniform="item")
 
+# remove frame for item
 def rmframe(frameID):
 	i = itemID.index(frameID)
 	itemList[i][0].destroy()
@@ -77,38 +80,34 @@ def rmframe(frameID):
 			itemList[i][0].grid(row = i)
 
 # item entry
+# open item entry
 def openItemEntry():
 	print("TODO")
 	addItem.grid_remove()
 	cancelItem.grid()
 	submitItem.grid()
 
+# close item entry
 def closeItemEntry():
 	print("TODO")
 	addItem.grid()
 	cancelItem.grid_remove()
 	submitItem.grid_remove()
 
+# create next list for data, close item entry and create frame
 def submitItemEntry():
-	print("TODO")
-	itemData.append([])
-	itemData[-1].append(StringVar())
-	itemData[-1].append(StringVar())
-	itemData[-1].append(StringVar())
-	itemData[-1].append(StringVar())
-	mkframe()
+	itemData.append([StringVar(), StringVar(), StringVar(), StringVar()])
 	addItem.grid()
 	cancelItem.grid_remove()
 	submitItem.grid_remove()
+	mkframe()
+
 
 root = Tk()
 root.geometry('700x700')
 root.resizable(False,False)
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
-
-s = ttk.Style()
-s.configure("red.TFrame", background="red")
 
 
 mainframe = ttk.Frame(root, padding="3 3 3 3")
@@ -129,10 +128,7 @@ sortName.grid(column=0, row=0)
 sortItem.grid(column=2, row=0)
 sortReceipt.grid(column=1, row=0)
 sortItemNum.grid(column=3, row=0)
-sort.columnconfigure(0, weight=1, uniform="sort")
-sort.columnconfigure(1, weight=1, uniform="sort")
-sort.columnconfigure(2, weight=1, uniform="sort")
-sort.columnconfigure(3, weight=1, uniform="sort")
+sort.columnconfigure((0, 1, 2, 3), weight=1, uniform="sort")
 
 
 itemCanvas = Canvas(mainframe, highlightthickness=0)
@@ -159,19 +155,19 @@ itemEntryFrame = ttk.Frame(mainframe)
 itemEntryFrame.grid(column=0, row=2, sticky=EW, columnspan=2)
 itemEntryFrame.columnconfigure(0, weight=1, uniform="entry")
 itemEntryFrame.columnconfigure(1, weight=1, uniform="entry")
-addItem = ttk.Label(itemEntryFrame, text="Add item", borderwidth=2, relief="solid",
-				padding="10 10 10 10", anchor="center")
+addItem = ttk.Label(itemEntryFrame, text="Add item", borderwidth=2,
+				relief="solid", padding="10 10 10 10", anchor="center")
 addItem.grid(column=0, row=0, sticky=EW, columnspan=2, padx=3, pady=3)
 addItem.bind("<Button-1>", lambda event: openItemEntry())
 
-cancelItem = ttk.Label(itemEntryFrame, text="Cancel", borderwidth=2, relief="solid",
-				padding="10 10 10 10", anchor="center")
+cancelItem = ttk.Label(itemEntryFrame, text="Cancel", borderwidth=2,
+				relief="solid", padding="10 10 10 10", anchor="center")
 cancelItem.grid(column=0, row=0, sticky=EW, padx=3, pady=3)
 cancelItem.bind("<Button-1>", lambda event: closeItemEntry())
 cancelItem.grid_remove()
 
-submitItem = ttk.Label(itemEntryFrame, text="Submit", borderwidth=2, relief="solid",
-				padding="10 10 10 10", anchor="center")
+submitItem = ttk.Label(itemEntryFrame, text="Submit", borderwidth=2,
+				relief="solid", padding="10 10 10 10", anchor="center")
 submitItem.grid(column=1, row=0, sticky=EW, padx=3, pady=3)
 submitItem.bind("<Button-1>", lambda event: submitItemEntry())
 submitItem.grid_remove()
