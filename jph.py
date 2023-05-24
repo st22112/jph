@@ -84,6 +84,7 @@ def rmframe(frameID):
 def openItemEntry():
 	print("TODO")
 	addItem.grid_remove()
+	listItem.grid()
 	cancelItem.grid()
 	submitItem.grid()
 
@@ -91,6 +92,7 @@ def openItemEntry():
 def closeItemEntry():
 	print("TODO")
 	addItem.grid()
+	listItem.grid_remove()
 	cancelItem.grid_remove()
 	submitItem.grid_remove()
 
@@ -98,6 +100,7 @@ def closeItemEntry():
 def submitItemEntry():
 	itemData.append([StringVar(), StringVar(), StringVar(), StringVar()])
 	addItem.grid()
+	listItem.grid_remove()
 	cancelItem.grid_remove()
 	submitItem.grid_remove()
 	mkframe()
@@ -108,6 +111,10 @@ root.geometry('700x700')
 root.resizable(False,False)
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
+
+s = ttk.Style()
+s.configure("red.TFrame", background="red")
+#, style="red.TFrame"
 
 
 mainframe = ttk.Frame(root, padding="3 3 3 3")
@@ -125,8 +132,8 @@ sortReceipt = ttk.Label(sort, text="Receipt")
 sortItem = ttk.Label(sort, text="Item")
 sortItemNum = ttk.Label(sort, text="Number of Items")
 sortName.grid(column=0, row=0)
-sortItem.grid(column=2, row=0)
 sortReceipt.grid(column=1, row=0)
+sortItem.grid(column=2, row=0)
 sortItemNum.grid(column=3, row=0)
 sort.columnconfigure((0, 1, 2, 3), weight=1, uniform="sort")
 
@@ -155,20 +162,34 @@ itemEntryFrame = ttk.Frame(mainframe)
 itemEntryFrame.grid(column=0, row=2, sticky=EW, columnspan=2)
 itemEntryFrame.columnconfigure(0, weight=1, uniform="entry")
 itemEntryFrame.columnconfigure(1, weight=1, uniform="entry")
+
 addItem = ttk.Label(itemEntryFrame, text="Add item", borderwidth=2,
 				relief="solid", padding="10 10 10 10", anchor="center")
 addItem.grid(column=0, row=0, sticky=EW, columnspan=2, padx=3, pady=3)
 addItem.bind("<Button-1>", lambda event: openItemEntry())
 
+listItem = ttk.Frame(itemEntryFrame, padding="3 3 3 3", borderwidth=2, relief="solid")
+listItem.grid(column=0, row=0, sticky=EW, columnspan=2, padx=3, pady=3)
+listName = ttk.Label(listItem, text="Name")
+listReceipt = ttk.Label(listItem, text="Receipt")
+listItemName = ttk.Label(listItem, text="Item")
+listItemNum = ttk.Label(listItem, text="Number of Items")
+listName.grid(column=0, row=0)
+listReceipt.grid(column=1, row=0)
+listItemName.grid(column=2, row=0)
+listItemNum.grid(column=3, row=0)
+listItem.columnconfigure((0, 1, 2, 3), weight=1, uniform="listItem")
+listItem.grid_remove()
+
 cancelItem = ttk.Label(itemEntryFrame, text="Cancel", borderwidth=2,
 				relief="solid", padding="10 10 10 10", anchor="center")
-cancelItem.grid(column=0, row=0, sticky=EW, padx=3, pady=3)
+cancelItem.grid(column=0, row=1, sticky=EW, padx=3, pady=3)
 cancelItem.bind("<Button-1>", lambda event: closeItemEntry())
 cancelItem.grid_remove()
 
 submitItem = ttk.Label(itemEntryFrame, text="Submit", borderwidth=2,
 				relief="solid", padding="10 10 10 10", anchor="center")
-submitItem.grid(column=1, row=0, sticky=EW, padx=3, pady=3)
+submitItem.grid(column=1, row=1, sticky=EW, padx=3, pady=3)
 submitItem.bind("<Button-1>", lambda event: submitItemEntry())
 submitItem.grid_remove()
 
