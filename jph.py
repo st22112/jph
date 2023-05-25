@@ -99,6 +99,10 @@ def closeItemEntry():
 # create next list for data, close item entry and create frame
 def submitItemEntry():
 	itemData.append([StringVar(), StringVar(), StringVar(), StringVar()])
+	inputName["textvariable"] = itemData[-1][0]
+	inputReceipt["textvariable"] = itemData[-1][1]
+	inputItemName["textvariable"] = itemData[-1][2]
+	inputItemNum["textvariable"] = itemData[-1][3]
 	addItem.grid()
 	listItem.grid_remove()
 	cancelItem.grid_remove()
@@ -111,6 +115,11 @@ root.geometry('700x700')
 root.resizable(False,False)
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
+
+
+itemList = []
+itemID = []
+itemData = [[StringVar(), StringVar(), StringVar(), StringVar()]]
 
 s = ttk.Style()
 s.configure("red.TFrame", background="red")
@@ -170,14 +179,18 @@ addItem.bind("<Button-1>", lambda event: openItemEntry())
 
 listItem = ttk.Frame(itemEntryFrame, padding="3 3 3 3", borderwidth=2, relief="solid")
 listItem.grid(column=0, row=0, sticky=EW, columnspan=2, padx=3, pady=3)
-listName = ttk.Label(listItem, text="Name")
-listReceipt = ttk.Label(listItem, text="Receipt")
-listItemName = ttk.Label(listItem, text="Item")
-listItemNum = ttk.Label(listItem, text="Number of Items")
-listName.grid(column=0, row=0)
-listReceipt.grid(column=1, row=0)
-listItemName.grid(column=2, row=0)
-listItemNum.grid(column=3, row=0)
+ttk.Label(listItem, text="Name").grid(column=0, row=0)
+ttk.Label(listItem, text="Receipt").grid(column=1, row=0)
+ttk.Label(listItem, text="Item").grid(column=2, row=0)
+ttk.Label(listItem, text="Number of Items").grid(column=3, row=0)
+inputName = ttk.Entry(listItem, textvariable=itemData[-1][0])
+inputReceipt = ttk.Entry(listItem, textvariable=itemData[-1][1])
+inputItemName = ttk.Entry(listItem, textvariable=itemData[-1][2])
+inputItemNum = ttk.Entry(listItem, textvariable=itemData[-1][3])
+inputName.grid(column=0, row=1)
+inputReceipt.grid(column=1, row=1)
+inputItemName.grid(column=2, row=1)
+inputItemNum.grid(column=3, row=1)
 listItem.columnconfigure((0, 1, 2, 3), weight=1, uniform="listItem")
 listItem.grid_remove()
 
@@ -193,9 +206,5 @@ submitItem.grid(column=1, row=1, sticky=EW, padx=3, pady=3)
 submitItem.bind("<Button-1>", lambda event: submitItemEntry())
 submitItem.grid_remove()
 
-
-itemList = []
-itemID = []
-itemData = [[StringVar(), StringVar(), StringVar(), StringVar()]]
 
 root.mainloop()
