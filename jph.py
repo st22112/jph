@@ -50,6 +50,10 @@ def unbindToCanvas(*args):
 # frame management
 # add frame for item
 def mkframe():
+	print(itemData[-2][3])
+	print(type(itemData[-2][3]))
+	print(itemData[-2][3].get())
+	print(type(itemData[-2][3].get()))
 	itemList.append([])
 	frameID = next(
 		i for i, e in enumerate(sorted(itemID) + [None], 0) if i != e
@@ -131,8 +135,20 @@ def submitItemEntry():
 	mkframe()
 
 
-def validateName(inStr):
-	print(inStr)
+# jump
+def validateName(inputAction, inputStr):
+	if inputAction == "1" and len(inputStr) > 20:
+		return False
+	return True
+
+def validateReceipt(inputAction, inputStr):
+	if inputAction == "1" and (len(inputStr) > 20 or not inputStr.isdigit()):
+		return False
+	return True
+
+def validateItemNum(inputAction, inputStr):
+	if inputAction == "1" and (not inputStr.isdigit() or int(inputStr) > 500):
+		return False
 	return True
 
 
@@ -217,10 +233,13 @@ ttk.Label(listItem, text="Receipt").grid(column=1, row=0)
 ttk.Label(listItem, text="Item").grid(column=2, row=0)
 ttk.Label(listItem, text="Number of Items").grid(column=3, row=0)
 inputName = ttk.Entry(listItem, textvariable=itemData[-1][0], validate="key")
-inputName["validatecommand"] = (inputName.register(validateName), "%P")
-inputReceipt = ttk.Entry(listItem, textvariable=itemData[-1][1])
-inputItemName = ttk.Entry(listItem, textvariable=itemData[-1][2])
-inputItemNum = ttk.Entry(listItem, textvariable=itemData[-1][3])
+inputReceipt = ttk.Entry(listItem, textvariable=itemData[-1][1], validate="key")
+inputItemName = ttk.Entry(listItem, textvariable=itemData[-1][2], validate="key")
+inputItemNum = ttk.Entry(listItem, textvariable=itemData[-1][3], validate="key")
+inputName["validatecommand"] = (inputName.register(validateName), "%d", "%P")
+inputReceipt["validatecommand"] = (inputName.register(validateReceipt), "%d", "%P")
+inputItemName["validatecommand"] = (inputName.register(validateName), "%d", "%P")
+inputItemNum["validatecommand"] = (inputName.register(validateItemNum), "%d", "%P")
 inputName.grid(column=0, row=1)
 inputReceipt.grid(column=1, row=1)
 inputItemName.grid(column=2, row=1)
