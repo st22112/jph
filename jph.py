@@ -50,10 +50,6 @@ def unbindToCanvas(*args):
 # frame management
 # add frame for item
 def mkframe():
-	print(itemData[-2][3])
-	print(type(itemData[-2][3]))
-	print(itemData[-2][3].get())
-	print(type(itemData[-2][3].get()))
 	itemList.append([])
 	frameID = next(
 		i for i, e in enumerate(sorted(itemID) + [None], 0) if i != e
@@ -105,7 +101,6 @@ def rmframe(frameID):
 # item entry
 # open item entry
 def openItemEntry():
-	print("TODO")
 	addItem.grid_remove()
 	listItem.grid()
 	cancelItem.grid()
@@ -114,7 +109,6 @@ def openItemEntry():
 
 # close item entry
 def closeItemEntry():
-	print("TODO")
 	addItem.grid()
 	listItem.grid_remove()
 	cancelItem.grid_remove()
@@ -123,16 +117,17 @@ def closeItemEntry():
 
 # create next list for data, close item entry and create frame
 def submitItemEntry():
-	itemData.append([StringVar(), StringVar(), StringVar(), StringVar()])
-	inputName["textvariable"] = itemData[-1][0]
-	inputReceipt["textvariable"] = itemData[-1][1]
-	inputItemName["textvariable"] = itemData[-1][2]
-	inputItemNum["textvariable"] = itemData[-1][3]
-	addItem.grid()
-	listItem.grid_remove()
-	cancelItem.grid_remove()
-	submitItem.grid_remove()
-	mkframe()
+	if(validateData(-1)):
+		itemData.append([StringVar(), StringVar(), StringVar(), StringVar()])
+		inputName["textvariable"] = itemData[-1][0]
+		inputReceipt["textvariable"] = itemData[-1][1]
+		inputItemName["textvariable"] = itemData[-1][2]
+		inputItemNum["textvariable"] = itemData[-1][3]
+		addItem.grid()
+		listItem.grid_remove()
+		cancelItem.grid_remove()
+		submitItem.grid_remove()
+		mkframe()
 
 
 # jump
@@ -147,9 +142,19 @@ def validateReceipt(inputAction, inputStr):
 	return True
 
 def validateItemNum(inputAction, inputStr):
-	if inputAction == "1" and (not inputStr.isdigit() or int(inputStr) > 500):
+	if inputAction == "1" and (len(inputStr) > 3 or not inputStr.isdigit() or int(inputStr) > 500):
 		return False
 	return True
+
+def validateData(index):
+	itemData[index][0].set(itemData[index][0].get().strip())
+	itemData[index][1].set(itemData[index][1].get().lstrip("0"))
+	itemData[index][2].set(itemData[index][2].get().strip())
+	itemData[index][3].set(itemData[index][3].get().lstrip("0"))
+	for i in range(4):
+		if itemData[index][i].get() == "":
+			return False
+	return True;
 
 
 root = Tk()
@@ -244,6 +249,8 @@ inputName.grid(column=0, row=1)
 inputReceipt.grid(column=1, row=1)
 inputItemName.grid(column=2, row=1)
 inputItemNum.grid(column=3, row=1)
+inputError = ttk.Label(listItem, text="TODO error")
+inputError.grid(column=0, row=2, columnspan=4)
 listItem.columnconfigure((0, 1, 2, 3), weight=1, uniform="listItem")
 listItem.grid_remove()
 
