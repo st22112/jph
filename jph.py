@@ -105,6 +105,7 @@ def openItemEntry():
 	listItem.grid()
 	cancelItem.grid()
 	submitItem.grid()
+	inputError.grid_remove()
 
 
 # close item entry
@@ -113,11 +114,14 @@ def closeItemEntry():
 	listItem.grid_remove()
 	cancelItem.grid_remove()
 	submitItem.grid_remove()
+	inputError.grid_remove()
+	print("ok")
 
 
 # create next list for data, close item entry and create frame
 def submitItemEntry():
-	if(validateData(-1)):
+	valid = validateData(-1)
+	if(valid == 0):
 		itemData.append([StringVar(), StringVar(), StringVar(), StringVar()])
 		inputName["textvariable"] = itemData[-1][0]
 		inputReceipt["textvariable"] = itemData[-1][1]
@@ -127,7 +131,10 @@ def submitItemEntry():
 		listItem.grid_remove()
 		cancelItem.grid_remove()
 		submitItem.grid_remove()
+		print("ok")
+		inputError.grid_remove()
 		mkframe()
+	addItemError(valid)
 
 
 # jump
@@ -153,8 +160,19 @@ def validateData(index):
 	itemData[index][3].set(itemData[index][3].get().lstrip("0"))
 	for i in range(4):
 		if itemData[index][i].get() == "":
-			return False
-	return True;
+			return (i+1)
+	return 0;
+
+def addItemError(error):
+	if error == 1:
+		inputError["text"] = "Customer name must not be empty"
+	if error == 2:
+		inputError["text"] = "Receipt number must not be empty"
+	if error == 3:
+		inputError["text"] = "Item name must not be empty"
+	if error == 4:
+		inputError["text"] = "Number of items must not be empty"
+	inputError.grid()
 
 
 root = Tk()
@@ -183,9 +201,9 @@ mainframe.rowconfigure(2, weight=0)
 
 sort = ttk.Frame(mainframe, padding="3 3 3 3", borderwidth=2, relief="solid")
 sort.grid(column=0, row=0, sticky=EW, padx=6)
-sortName = ttk.Label(sort, text="Name")
-sortReceipt = ttk.Label(sort, text="Receipt")
-sortItem = ttk.Label(sort, text="Item")
+sortName = ttk.Label(sort, text="Customer name")
+sortReceipt = ttk.Label(sort, text="Receipt number")
+sortItem = ttk.Label(sort, text="Item name")
 sortItemNum = ttk.Label(sort, text="Number of Items")
 sortName.grid(column=0, row=0)
 sortReceipt.grid(column=1, row=0)
@@ -233,9 +251,9 @@ listItem = ttk.Frame(
 	itemEntryFrame, padding="3 3 3 3", borderwidth=2, relief="solid"
 )
 listItem.grid(column=0, row=0, sticky=EW, columnspan=2, padx=3, pady=3)
-ttk.Label(listItem, text="Name").grid(column=0, row=0)
-ttk.Label(listItem, text="Receipt").grid(column=1, row=0)
-ttk.Label(listItem, text="Item").grid(column=2, row=0)
+ttk.Label(listItem, text="Customer name").grid(column=0, row=0)
+ttk.Label(listItem, text="Receipt number").grid(column=1, row=0)
+ttk.Label(listItem, text="Item name").grid(column=2, row=0)
 ttk.Label(listItem, text="Number of Items").grid(column=3, row=0)
 inputName = ttk.Entry(listItem, textvariable=itemData[-1][0], validate="key")
 inputReceipt = ttk.Entry(listItem, textvariable=itemData[-1][1], validate="key")
@@ -249,8 +267,9 @@ inputName.grid(column=0, row=1)
 inputReceipt.grid(column=1, row=1)
 inputItemName.grid(column=2, row=1)
 inputItemNum.grid(column=3, row=1)
-inputError = ttk.Label(listItem, text="TODO error")
+inputError = ttk.Label(listItem, text="")
 inputError.grid(column=0, row=2, columnspan=4)
+inputError.grid_remove()
 listItem.columnconfigure((0, 1, 2, 3), weight=1, uniform="listItem")
 listItem.grid_remove()
 
