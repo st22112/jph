@@ -61,7 +61,6 @@ def mkframe():
 	itemList[-1][0].grid(
 		column=0, row=len(itemList) - 1, sticky=EW, padx=3, pady=3
 	)
-	itemList[-1][0].bind("<Button-1>", lambda event: rmframe(frameID))
 
 	itemList[-1].append(
 		ttk.Label(itemList[-1][0], textvariable=itemData[-2][0])
@@ -84,6 +83,9 @@ def mkframe():
 	itemList[-1][4].grid(column=3, row=0)
 
 	itemList[-1][0].columnconfigure((0, 1, 2, 3), weight=1, uniform="item")
+
+	itemList[-1].append(ttk.Button(itemList[-1][0], text="X", width=2, command=lambda: rmframe(frameID)))
+	itemList[-1][5].grid(column=4, row=0)
 
 
 # remove frame for item
@@ -197,7 +199,7 @@ mainframe.rowconfigure(1, weight=1)
 mainframe.rowconfigure(2, weight=0)
 
 
-sort = ttk.Frame(mainframe, padding="3 3 3 3", borderwidth=2, relief="solid")
+sort = ttk.Frame(mainframe, padding="3 3 28 3", borderwidth=2, relief="solid")
 sort.grid(column=0, row=0, sticky=EW, padx=6)
 sortName = ttk.Label(sort, text="Customer name")
 sortReceipt = ttk.Label(sort, text="Receipt number")
