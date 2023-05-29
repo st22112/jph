@@ -115,7 +115,6 @@ def closeItemEntry():
 	cancelItem.grid_remove()
 	submitItem.grid_remove()
 	inputError.grid_remove()
-	print("ok")
 
 
 # create next list for data, close item entry and create frame
@@ -131,7 +130,6 @@ def submitItemEntry():
 		listItem.grid_remove()
 		cancelItem.grid_remove()
 		submitItem.grid_remove()
-		print("ok")
 		inputError.grid_remove()
 		mkframe()
 	addItemError(valid)
