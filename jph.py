@@ -84,7 +84,7 @@ def mkframe():
 
 	itemList[-1][0].columnconfigure((0, 1, 2, 3), weight=1, uniform="item")
 
-	itemList[-1].append(ttk.Button(itemList[-1][0], text="X", width=2, command=lambda: rmframe(frameID)))
+	itemList[-1].append(ttk.Button(itemList[-1][0], text="X", width=2, style="delete.TButton", command=lambda: rmframe(frameID)))
 	itemList[-1][5].grid(column=4, row=0)
 
 
@@ -186,7 +186,7 @@ def addItemError(error):
 
 root = Tk()
 root.geometry("700x700")
-root.resizable(False, False)
+#root.resizable(False, False)
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
@@ -196,8 +196,21 @@ itemID = []
 itemData = [[StringVar(), StringVar(), StringVar(), StringVar()]]
 
 s = ttk.Style()
-s.configure("red.TFrame", background="red")
-# , style="red.TFrame"
+s.theme_use("clam")
+s.configure("error.TLabel", foreground="red")
+s.configure(
+	"delete.TButton",
+	background="red",
+	bordercolor="red",
+	lightcolor="red",
+	darkcolor="red",
+	focuscolor="none"
+)
+s.map(
+	"delete.TButton",
+	background=[("pressed", "red"), ("active", "red")],
+	borderwidth=[("active", 0)],
+)
 
 
 mainframe = ttk.Frame(root, padding="3 3 3 3")
@@ -245,16 +258,22 @@ itemEntryFrame.grid(column=0, row=2, sticky=EW, columnspan=2)
 itemEntryFrame.columnconfigure(0, weight=1, uniform="entry")
 itemEntryFrame.columnconfigure(1, weight=1, uniform="entry")
 
-addItem = ttk.Label(
+#addItem = ttk.Label(
+#	itemEntryFrame,
+#	text="Add item",
+#	borderwidth=2,
+#	relief="solid",
+#	padding="10 10 10 10",
+#	anchor="center"
+#)
+addItem = ttk.Button(
 	itemEntryFrame,
 	text="Add item",
-	borderwidth=2,
-	relief="solid",
 	padding="10 10 10 10",
-	anchor="center"
+	command=openItemEntry
 )
 addItem.grid(column=0, row=0, sticky=EW, columnspan=2, padx=3, pady=3)
-addItem.bind("<Button-1>", lambda event: openItemEntry())
+#addItem.bind("<Button-1>", lambda event: openItemEntry())
 
 listItem = ttk.Frame(
 	itemEntryFrame, padding="3 3 3 3", borderwidth=2, relief="solid"
@@ -276,34 +295,46 @@ inputName.grid(column=0, row=1)
 inputReceipt.grid(column=1, row=1)
 inputItemName.grid(column=2, row=1)
 inputItemNum.grid(column=3, row=1)
-inputError = ttk.Label(listItem, text="")
-inputError.grid(column=0, row=2, columnspan=4)
+inputError = ttk.Label(listItem, style="error.TLabel")
+inputError.grid(column=0, row=2, columnspan=4, padx=3, pady=3)
 inputError.grid_remove()
 listItem.columnconfigure((0, 1, 2, 3), weight=1, uniform="listItem")
 listItem.grid_remove()
 
-cancelItem = ttk.Label(
+#cancelItem = ttk.Label(
+#	itemEntryFrame,
+#	text="Cancel",
+#	borderwidth=2,
+#	relief="solid",
+#	padding="10 10 10 10",
+#	anchor="center"
+#)
+cancelItem = ttk.Button(
 	itemEntryFrame,
 	text="Cancel",
-	borderwidth=2,
-	relief="solid",
 	padding="10 10 10 10",
-	anchor="center"
+	command=closeItemEntry
 )
 cancelItem.grid(column=0, row=1, sticky=EW, padx=3, pady=3)
-cancelItem.bind("<Button-1>", lambda event: closeItemEntry())
+#cancelItem.bind("<Button-1>", lambda event: closeItemEntry())
 cancelItem.grid_remove()
 
-submitItem = ttk.Label(
+#submitItem = ttk.Label(
+#	itemEntryFrame,
+#	text="Submit",
+#	borderwidth=2,
+#	relief="solid",
+#	padding="10 10 10 10",
+#	anchor="center"
+#)
+submitItem = ttk.Button(
 	itemEntryFrame,
 	text="Submit",
-	borderwidth=2,
-	relief="solid",
 	padding="10 10 10 10",
-	anchor="center"
+	command=submitItemEntry
 )
 submitItem.grid(column=1, row=1, sticky=EW, padx=3, pady=3)
-submitItem.bind("<Button-1>", lambda event: submitItemEntry())
+#submitItem.bind("<Button-1>", lambda event: submitItemEntry())
 submitItem.grid_remove()
 
 root.bind("<Return>", lambda event: openItemEntry())
