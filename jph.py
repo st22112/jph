@@ -103,11 +103,14 @@ def rmframe(frameID):
 # item entry
 # open item entry
 def openItemEntry():
+	for i in range(4):
+		itemData[-1][i].set("")
 	addItem.grid_remove()
 	listItem.grid()
 	cancelItem.grid()
 	submitItem.grid()
 	inputError.grid_remove()
+	root.bind("<Return>", lambda event: submitItemEntry())
 
 
 # close item entry
@@ -134,7 +137,9 @@ def submitItemEntry():
 		submitItem.grid_remove()
 		inputError.grid_remove()
 		mkframe()
-	addItemError(valid)
+		root.bind("<Return>", lambda event: openItemEntry())
+	else:
+		addItemError(valid)
 
 
 # jump
@@ -300,6 +305,8 @@ submitItem = ttk.Label(
 submitItem.grid(column=1, row=1, sticky=EW, padx=3, pady=3)
 submitItem.bind("<Button-1>", lambda event: submitItemEntry())
 submitItem.grid_remove()
+
+root.bind("<Return>", lambda event: openItemEntry())
 
 
 root.mainloop()
