@@ -170,7 +170,21 @@ def cancelEdit(frameID):
 	itemList[i][12].grid_remove()
 
 def submitEdit(frameID):
-	print("TODO")
+	i = itemID.index(frameID)
+	valid = validateData(i, 1)
+	if valid == 0:
+		for j in range(4):
+			itemData[i][j].set(itemData[i][j+4].get())
+		del itemData[i][-4:]
+		for j in range(4):
+			itemList[i][j+1].grid()
+			itemList[i][j+7].grid_remove()
+		itemList[i][5].grid()
+		itemList[i][6].grid()
+		itemList[i][11].grid_remove()
+		itemList[i][12].grid_remove()
+	else:
+		print("TODO")
 
 
 # item entry
@@ -197,8 +211,8 @@ def closeItemEntry():
 
 # create next list for data, close item entry and create frame
 def submitItemEntry():
-	valid = validateData(-1)
-	if(valid == 0):
+	valid = validateData(-1, 0)
+	if valid == 0:
 		itemData.append([StringVar(), StringVar(), StringVar(), StringVar()])
 		inputName["textvariable"] = itemData[-1][0]
 		inputReceipt["textvariable"] = itemData[-1][1]
@@ -231,17 +245,31 @@ def validateItemNum(inputAction, inputStr):
 		return False
 	return True
 
-def validateData(index):
-	itemData[index][0].set(itemData[index][0].get().strip())
-	itemData[index][1].set(itemData[index][1].get().lstrip("0"))
-	itemData[index][2].set(itemData[index][2].get().strip())
-	itemData[index][3].set(itemData[index][3].get().lstrip("0"))
-	for i in range(4):
-		if itemData[index][i].get() == "":
-			return (i+1)
-	if itemData[index][1].get() in [receipt[1].get() for receipt in itemData[0:-1]]:
-		return 5
-	return 0;
+def validateData(index, mode):
+	if mode == 0:
+		itemData[index][0].set(itemData[index][0].get().strip())
+		itemData[index][1].set(itemData[index][1].get().lstrip("0"))
+		itemData[index][2].set(itemData[index][2].get().strip())
+		itemData[index][3].set(itemData[index][3].get().lstrip("0"))
+		for i in range(4):
+			if itemData[index][i].get() == "":
+				return (i+1)
+		if itemData[index][1].get() in [receipt[1].get() for receipt in itemData[:-1]]:
+			return 5
+		return 0;
+	if mode == 1:
+		itemData[index][4].set(itemData[index][4].get().strip())
+		itemData[index][5].set(itemData[index][5].get().lstrip("0"))
+		itemData[index][6].set(itemData[index][6].get().strip())
+		itemData[index][7].set(itemData[index][7].get().lstrip("0"))
+		for i in range(4):
+			if itemData[index][i+4].get() == "":
+				return (i+1)
+		if itemData[index][5].get() in [receipt[1].get() for receipt in itemData[0:index]]:
+			return 5
+		if itemData[index][5].get() in [receipt[1].get() for receipt in itemData[index+1:]]:
+			return 5
+		return 0;
 
 def addItemError(error):
 	if error == 1:
