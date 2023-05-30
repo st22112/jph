@@ -9,13 +9,11 @@ def updateCanvas(itemFrameID):
 	itemCanvas["scrollregion"] = itemCanvas.bbox("all")
 	itemCanvas.itemconfigure(itemFrameID, width=itemCanvas.winfo_width())
 
-
 # scoll itemcanvas only when itemframe is bigger than canvas
 def scrollCanvas(*args):
 	if itemCanvas.yview() == (0.0, 1.0):
 		return
 	itemCanvas.yview(*args)
-
 
 # control scrollwheel scrolling
 def mousewheelCanvas(event, scroll=None):
@@ -28,7 +26,6 @@ def mousewheelCanvas(event, scroll=None):
 	else:
 		itemCanvas.yview_scroll(-1 * event.delta, "units")
 
-
 # bind scrollwheel to scroll itemcanvas
 def bindToCanvas(*args):
 	if platform == "linux" or platform == "linux2":
@@ -36,7 +33,6 @@ def bindToCanvas(*args):
 		root.bind_all("<Button-5>", lambda event: mousewheelCanvas(event, 1))
 	else:
 		root.bind_all("<MouseWheel>", lambda event: mousewheelCanvas(event))
-
 
 # unbind scrollwheel to scroll itemcanvas
 def unbindToCanvas(*args):
@@ -132,8 +128,6 @@ def mkFrame():
 	itemList[-1][13].grid(column=0, row=1, columnspan=4)
 	itemList[-1][13].grid_remove()
 
-
-
 # remove frame for item
 def rmFrame(frameID):
 	i = itemID.index(frameID)
@@ -145,6 +139,9 @@ def rmFrame(frameID):
 		for i in range(i, len(itemID)):
 			itemList[i][0].grid(row=i)
 
+
+# editing
+# change labels to entries
 def openEdit(frameID):
 	i = itemID.index(frameID)
 	for j in range(4):
@@ -163,6 +160,7 @@ def openEdit(frameID):
 	itemList[i][12].grid()
 	itemList[i][13].grid_remove()
 
+# change entries back to labels
 def cancelEdit(frameID):
 	i = itemID.index(frameID)
 	del itemData[i][-4:]
@@ -175,6 +173,7 @@ def cancelEdit(frameID):
 	itemList[i][12].grid_remove()
 	itemList[i][13].grid_remove()
 
+# validate data in entry, submit and change entries back to labels
 def submitEdit(frameID):
 	i = itemID.index(frameID)
 	valid = validateData(i, 1)
@@ -205,7 +204,7 @@ def openItemEntry():
 	submitItem.grid()
 	inputError.grid_remove()
 	root.bind("<Return>", lambda event: submitItemEntry())
-
+	root.bind("<Escape>", lambda event: closeItemEntry())
 
 # close item entry
 def closeItemEntry():
@@ -214,7 +213,8 @@ def closeItemEntry():
 	cancelItem.grid_remove()
 	submitItem.grid_remove()
 	inputError.grid_remove()
-
+	root.bind("<Return>", lambda event: openItemEntry())
+	root.unbind("<Escape>")
 
 # create next list for data, close item entry and create frame
 def submitItemEntry():
@@ -232,26 +232,31 @@ def submitItemEntry():
 		inputError.grid_remove()
 		mkFrame()
 		root.bind("<Return>", lambda event: openItemEntry())
+		root.unbind("<Escape>")
 	else:
 		addItemError(inputError, valid)
 
 
-# jump
+# validation
+# limit input to 20 chars
 def validateName(inputAction, inputStr):
 	if inputAction == "1" and len(inputStr) > 20:
 		return False
 	return True
 
+# limit input to 20 digits
 def validateReceipt(inputAction, inputStr):
 	if inputAction == "1" and (len(inputStr) > 20 or not inputStr.isdigit()):
 		return False
 	return True
 
+# limit input to digits <= 500
 def validateItemNum(inputAction, inputStr):
 	if inputAction == "1" and (len(inputStr) > 3 or not inputStr.isdigit() or int(inputStr) > 500):
 		return False
 	return True
 
+# check for empty entries and repeated recipt numbers
 def validateData(index, mode):
 	if mode == 0:
 		itemData[index][0].set(itemData[index][0].get().strip())
@@ -278,6 +283,7 @@ def validateData(index, mode):
 			return 5
 		return 0;
 
+# show error message
 def addItemError(label, error):
 	if error == 1:
 		label["text"] = "Customer name must not be empty"
@@ -293,16 +299,18 @@ def addItemError(label, error):
 
 
 root = Tk()
-root.geometry("700x700")
-#root.resizable(False, False)
+root.geometry("900x700")
+# root.resizable(False, False)
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
 
+# lists containing frames and data
 itemList = []
 itemID = []
 itemData = [[StringVar(), StringVar(), StringVar(), StringVar()]]
 
+# styling
 s = ttk.Style()
 s.theme_use("clam")
 s.configure("error.TLabel", foreground="red")
@@ -367,14 +375,6 @@ itemEntryFrame.grid(column=0, row=2, sticky=EW, columnspan=2)
 itemEntryFrame.columnconfigure(0, weight=1, uniform="entry")
 itemEntryFrame.columnconfigure(1, weight=1, uniform="entry")
 
-#addItem = ttk.Label(
-#	itemEntryFrame,
-#	text="Add item",
-#	borderwidth=2,
-#	relief="solid",
-#	padding="10 10 10 10",
-#	anchor="center"
-#)
 addItem = ttk.Button(
 	itemEntryFrame,
 	text="Add item",
@@ -382,7 +382,6 @@ addItem = ttk.Button(
 	command=openItemEntry
 )
 addItem.grid(column=0, row=0, sticky=EW, columnspan=2, padx=3, pady=3)
-#addItem.bind("<Button-1>", lambda event: openItemEntry())
 
 listItem = ttk.Frame(
 	itemEntryFrame, padding="3 3 3 3", borderwidth=2, relief="solid"
@@ -410,14 +409,6 @@ inputError.grid_remove()
 listItem.columnconfigure((0, 1, 2, 3), weight=1, uniform="listItem")
 listItem.grid_remove()
 
-#cancelItem = ttk.Label(
-#	itemEntryFrame,
-#	text="Cancel",
-#	borderwidth=2,
-#	relief="solid",
-#	padding="10 10 10 10",
-#	anchor="center"
-#)
 cancelItem = ttk.Button(
 	itemEntryFrame,
 	text="Cancel",
@@ -425,17 +416,8 @@ cancelItem = ttk.Button(
 	command=closeItemEntry
 )
 cancelItem.grid(column=0, row=1, sticky=EW, padx=3, pady=3)
-#cancelItem.bind("<Button-1>", lambda event: closeItemEntry())
 cancelItem.grid_remove()
 
-#submitItem = ttk.Label(
-#	itemEntryFrame,
-#	text="Submit",
-#	borderwidth=2,
-#	relief="solid",
-#	padding="10 10 10 10",
-#	anchor="center"
-#)
 submitItem = ttk.Button(
 	itemEntryFrame,
 	text="Submit",
@@ -443,7 +425,6 @@ submitItem = ttk.Button(
 	command=submitItemEntry
 )
 submitItem.grid(column=1, row=1, sticky=EW, padx=3, pady=3)
-#submitItem.bind("<Button-1>", lambda event: submitItemEntry())
 submitItem.grid_remove()
 
 root.bind("<Return>", lambda event: openItemEntry())
