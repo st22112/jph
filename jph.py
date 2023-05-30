@@ -128,6 +128,10 @@ def mkFrame():
 	itemList[-1][12].grid(column=5, row=0)
 	itemList[-1][12].grid_remove()
 
+	itemList[-1].append(ttk.Label(itemList[-1][0], text="woasdfkasdhflkjashdlkfhlkajsfw", style="error.TLabel"))
+	itemList[-1][13].grid(column=0, row=1, columnspan=4)
+	itemList[-1][13].grid_remove()
+
 
 
 # remove frame for item
@@ -157,6 +161,7 @@ def openEdit(frameID):
 	itemList[i][6].grid_remove()
 	itemList[i][11].grid()
 	itemList[i][12].grid()
+	itemList[i][13].grid_remove()
 
 def cancelEdit(frameID):
 	i = itemID.index(frameID)
@@ -168,6 +173,7 @@ def cancelEdit(frameID):
 	itemList[i][6].grid()
 	itemList[i][11].grid_remove()
 	itemList[i][12].grid_remove()
+	itemList[i][13].grid_remove()
 
 def submitEdit(frameID):
 	i = itemID.index(frameID)
@@ -183,8 +189,9 @@ def submitEdit(frameID):
 		itemList[i][6].grid()
 		itemList[i][11].grid_remove()
 		itemList[i][12].grid_remove()
+		itemList[i][13].grid_remove()
 	else:
-		print("TODO")
+		addItemError(itemList[i][13], valid)
 
 
 # item entry
@@ -226,7 +233,7 @@ def submitItemEntry():
 		mkFrame()
 		root.bind("<Return>", lambda event: openItemEntry())
 	else:
-		addItemError(valid)
+		addItemError(inputError, valid)
 
 
 # jump
@@ -271,18 +278,18 @@ def validateData(index, mode):
 			return 5
 		return 0;
 
-def addItemError(error):
+def addItemError(label, error):
 	if error == 1:
-		inputError["text"] = "Customer name must not be empty"
+		label["text"] = "Customer name must not be empty"
 	if error == 2:
-		inputError["text"] = "Receipt number must not be empty"
+		label["text"] = "Receipt number must not be empty"
 	if error == 3:
-		inputError["text"] = "Item name must not be empty"
+		label["text"] = "Item name must not be empty"
 	if error == 4:
-		inputError["text"] = "Number of items must not be empty"
+		label["text"] = "Number of items must not be empty"
 	if error == 5:
-		inputError["text"] = "Receipt number must be unique"
-	inputError.grid()
+		label["text"] = "Receipt number must be unique"
+	label.grid()
 
 
 root = Tk()
