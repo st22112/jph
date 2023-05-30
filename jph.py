@@ -49,7 +49,7 @@ def unbindToCanvas(*args):
 
 # frame management
 # add frame for item
-def mkframe():
+def mkFrame():
 	itemList.append([])
 	frameID = next(
 		i for i, e in enumerate(sorted(itemID) + [None], 0) if i != e
@@ -61,6 +61,7 @@ def mkframe():
 	itemList[-1][0].grid(
 		column=0, row=len(itemList) - 1, sticky=EW, padx=3, pady=3
 	)
+
 
 	itemList[-1].append(
 		ttk.Label(itemList[-1][0], textvariable=itemData[-2][0])
@@ -84,12 +85,53 @@ def mkframe():
 
 	itemList[-1][0].columnconfigure((0, 1, 2, 3), weight=1, uniform="item")
 
-	itemList[-1].append(ttk.Button(itemList[-1][0], text="X", width=2, style="delete.TButton", command=lambda: rmframe(frameID)))
-	itemList[-1][5].grid(column=4, row=0)
+	itemList[-1].append(ttk.Button(itemList[-1][0], text="edit", width=4, command=lambda: openEdit(frameID)))
+	itemList[-1][5].grid(column=4, row=0, padx=6)
+
+	itemList[-1].append(ttk.Button(itemList[-1][0], text="\U0001f5d9", width=3, style="delete.TButton", command=lambda: rmFrame(frameID)))
+	itemList[-1][6].grid(column=5, row=0)
+
+
+	itemList[-1].append(
+		ttk.Entry(itemList[-1][0], validate="key")
+	)
+	itemList[-1][7].grid(column=0, row=0)
+	itemList[-1][7].grid_remove()
+	itemList[-1][7]["validatecommand"] = (inputName.register(validateName), "%d", "%P")
+
+	itemList[-1].append(
+		ttk.Entry(itemList[-1][0], validate="key")
+	)
+	itemList[-1][8].grid(column=1, row=0)
+	itemList[-1][8].grid_remove()
+	itemList[-1][8]["validatecommand"] = (inputName.register(validateReceipt), "%d", "%P")
+
+	itemList[-1].append(
+		ttk.Entry(itemList[-1][0], validate="key")
+	)
+	itemList[-1][9].grid(column=2, row=0)
+	itemList[-1][9].grid_remove()
+	itemList[-1][9]["validatecommand"] = (inputName.register(validateName), "%d", "%P")
+
+	itemList[-1].append(
+		ttk.Entry(itemList[-1][0], validate="key")
+	)
+	itemList[-1][10].grid(column=3, row=0)
+	itemList[-1][10].grid_remove()
+	itemList[-1][10]["validatecommand"] = (inputName.register(validateItemNum), "%d", "%P")
+
+	itemList[-1].append(ttk.Button(itemList[-1][0], text="\U0001f5d9", width=3, command=lambda: cancelEdit(frameID)))
+	itemList[-1][11].grid(column=4, row=0, padx=6)
+	itemList[-1][11].grid_remove()
+
+	itemList[-1].append(ttk.Button(itemList[-1][0], text="\u2713", width=3, command=lambda: submitEdit(frameID)))
+	itemList[-1][12].grid(column=5, row=0)
+	itemList[-1][12].grid_remove()
+
 
 
 # remove frame for item
-def rmframe(frameID):
+def rmFrame(frameID):
 	i = itemID.index(frameID)
 	itemList[i][0].destroy()
 	del itemList[i]
@@ -98,6 +140,37 @@ def rmframe(frameID):
 	if i < len(itemID):
 		for i in range(i, len(itemID)):
 			itemList[i][0].grid(row=i)
+
+def openEdit(frameID):
+	i = itemID.index(frameID)
+	for j in range(4):
+		itemData[i].append(StringVar())
+		itemData[i][j+4].set(itemData[i][j].get())
+
+	for j in range(4):
+		itemList[i][j+7]["textvariable"] = itemData[i][j+4]
+
+	for j in range(4):
+		itemList[i][j+1].grid_remove()
+		itemList[i][j+7].grid()
+	itemList[i][5].grid_remove()
+	itemList[i][6].grid_remove()
+	itemList[i][11].grid()
+	itemList[i][12].grid()
+
+def cancelEdit(frameID):
+	i = itemID.index(frameID)
+	del itemData[i][-4:]
+	for j in range(4):
+		itemList[i][j+1].grid()
+		itemList[i][j+7].grid_remove()
+	itemList[i][5].grid()
+	itemList[i][6].grid()
+	itemList[i][11].grid_remove()
+	itemList[i][12].grid_remove()
+
+def submitEdit(frameID):
+	print("TODO")
 
 
 # item entry
@@ -136,7 +209,7 @@ def submitItemEntry():
 		cancelItem.grid_remove()
 		submitItem.grid_remove()
 		inputError.grid_remove()
-		mkframe()
+		mkFrame()
 		root.bind("<Return>", lambda event: openItemEntry())
 	else:
 		addItemError(valid)
@@ -221,7 +294,8 @@ mainframe.rowconfigure(1, weight=1)
 mainframe.rowconfigure(2, weight=0)
 
 
-sort = ttk.Frame(mainframe, padding="3 3 28 3", borderwidth=2, relief="solid")
+sort = ttk.Frame(mainframe, padding="3 3 94 3", borderwidth=2, relief="solid")
+# 3 + itemList[-1][5].winfo_width() + 2*6 + itemList[-1][6].winfo_width()
 sort.grid(column=0, row=0, sticky=EW, padx=6)
 sortName = ttk.Label(sort, text="Customer name")
 sortReceipt = ttk.Label(sort, text="Receipt number")
