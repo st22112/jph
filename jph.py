@@ -161,6 +161,8 @@ def validateData(index):
 	for i in range(4):
 		if itemData[index][i].get() == "":
 			return (i+1)
+	if itemData[index][1].get() in [receipt[1].get() for receipt in itemData[0:-1]]:
+		return 5
 	return 0;
 
 def addItemError(error):
@@ -172,6 +174,8 @@ def addItemError(error):
 		inputError["text"] = "Item name must not be empty"
 	if error == 4:
 		inputError["text"] = "Number of items must not be empty"
+	if error == 5:
+		inputError["text"] = "Receipt number must be unique"
 	inputError.grid()
 
 
