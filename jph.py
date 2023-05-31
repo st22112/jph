@@ -93,28 +93,28 @@ def mkFrame():
 	)
 	itemList[-1][7].grid(column=0, row=0)
 	itemList[-1][7].grid_remove()
-	itemList[-1][7]["validatecommand"] = (inputName.register(validateName), "%d", "%P")
+	itemList[-1][7]["validatecommand"] = (itemList[-1][7].register(validateName), "%d", "%P")
 
 	itemList[-1].append(
 		ttk.Entry(itemList[-1][0], validate="key")
 	)
 	itemList[-1][8].grid(column=1, row=0)
 	itemList[-1][8].grid_remove()
-	itemList[-1][8]["validatecommand"] = (inputName.register(validateReceipt), "%d", "%P")
+	itemList[-1][8]["validatecommand"] = (itemList[-1][8].register(validateReceipt), "%d", "%P")
 
 	itemList[-1].append(
 		ttk.Entry(itemList[-1][0], validate="key")
 	)
 	itemList[-1][9].grid(column=2, row=0)
 	itemList[-1][9].grid_remove()
-	itemList[-1][9]["validatecommand"] = (inputName.register(validateName), "%d", "%P")
+	itemList[-1][9]["validatecommand"] = (itemList[-1][9].register(validateName), "%d", "%P")
 
 	itemList[-1].append(
 		ttk.Entry(itemList[-1][0], validate="key")
 	)
 	itemList[-1][10].grid(column=3, row=0)
 	itemList[-1][10].grid_remove()
-	itemList[-1][10]["validatecommand"] = (inputName.register(validateItemNum), "%d", "%P")
+	itemList[-1][10]["validatecommand"] = (itemList[-1][10].register(validateItemNum), "%d", "%P")
 
 	itemList[-1].append(ttk.Button(itemList[-1][0], text="\u2715", width=3, command=lambda: cancelEdit(frameID)))
 	itemList[-1][11].grid(column=4, row=0, padx=6)
@@ -127,6 +127,14 @@ def mkFrame():
 	itemList[-1].append(ttk.Label(itemList[-1][0], style="error.TLabel"))
 	itemList[-1][13].grid(column=0, row=1, columnspan=4)
 	itemList[-1][13].grid_remove()
+
+	# witchery for invalidcommand
+	def editInvalidCommandSubmit(error):
+		addItemError(itemList[-1][13], int(error))
+	itemList[-1][7]["invalidcommand"] = (itemList[-1][10].register(errorSubmit), 6)
+	itemList[-1][8]["invalidcommand"] = (itemList[-1][10].register(errorSubmit), 7)
+	itemList[-1][9]["invalidcommand"] = (itemList[-1][10].register(errorSubmit), 8)
+	itemList[-1][10]["invalidcommand"] = (itemList[-1][10].register(errorSubmit), 9)
 
 # remove frame for item
 def rmFrame(frameID):
@@ -295,7 +303,19 @@ def addItemError(label, error):
 		label["text"] = "Number of items must not be empty"
 	if error == 5:
 		label["text"] = "Receipt number must be unique"
+	if error == 6:
+		label["text"] = "Customer name must be 20 characters or under"
+	if error == 7:
+		label["text"] = "Receipt number must only contain digits and be 20 digits or under"
+	if error == 8:
+		label["text"] = "Item name must be 20 characters or under"
+	if error == 9:
+		label["text"] = "Number of items must only contain digits and be between 1-500"
 	label.grid()
+
+# witchery for invalidcommand
+def addInvalidCommandSubmit(error):
+	addItemError(inputError, int(error))
 
 
 root = Tk()
@@ -415,6 +435,10 @@ inputName["validatecommand"] = (inputName.register(validateName), "%d", "%P")
 inputReceipt["validatecommand"] = (inputName.register(validateReceipt), "%d", "%P")
 inputItemName["validatecommand"] = (inputName.register(validateName), "%d", "%P")
 inputItemNum["validatecommand"] = (inputName.register(validateItemNum), "%d", "%P")
+inputName["invalidcommand"] = (inputName.register(addInvalidCommandSubmit), 6)
+inputReceipt["invalidcommand"] = (inputName.register(addInvalidCommandSubmit), 7)
+inputItemName["invalidcommand"] = (inputName.register(addInvalidCommandSubmit), 8)
+inputItemNum["invalidcommand"] = (inputName.register(addInvalidCommandSubmit), 9)
 inputName.grid(column=0, row=1)
 inputReceipt.grid(column=1, row=1)
 inputItemName.grid(column=2, row=1)
@@ -424,6 +448,7 @@ inputError.grid(column=0, row=2, columnspan=4, padx=3, pady=3)
 inputError.grid_remove()
 listItem.columnconfigure((0, 1, 2, 3), weight=1, uniform="listItem")
 listItem.grid_remove()
+
 
 cancelItem = ttk.Button(
 	itemEntryFrame,
