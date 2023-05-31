@@ -44,7 +44,7 @@ def unbindToCanvas(*args):
 
 
 # frame management
-# add frame for item
+# create a frame to display data
 def mkFrame():
 	itemList.append([])
 	frameID = next(
@@ -84,7 +84,7 @@ def mkFrame():
 	itemList[-1].append(ttk.Button(itemList[-1][0], text="edit", width=4, command=lambda: openEdit(frameID)))
 	itemList[-1][5].grid(column=4, row=0, padx=6)
 
-	itemList[-1].append(ttk.Button(itemList[-1][0], text="\U0001f5d9", width=3, style="delete.TButton", command=lambda: rmFrame(frameID)))
+	itemList[-1].append(ttk.Button(itemList[-1][0], text="\u2715", width=3, style="delete.TButton", command=lambda: rmFrame(frameID)))
 	itemList[-1][6].grid(column=5, row=0)
 
 
@@ -116,7 +116,7 @@ def mkFrame():
 	itemList[-1][10].grid_remove()
 	itemList[-1][10]["validatecommand"] = (inputName.register(validateItemNum), "%d", "%P")
 
-	itemList[-1].append(ttk.Button(itemList[-1][0], text="\U0001f5d9", width=3, command=lambda: cancelEdit(frameID)))
+	itemList[-1].append(ttk.Button(itemList[-1][0], text="\u2715", width=3, command=lambda: cancelEdit(frameID)))
 	itemList[-1][11].grid(column=4, row=0, padx=6)
 	itemList[-1][11].grid_remove()
 
@@ -124,7 +124,7 @@ def mkFrame():
 	itemList[-1][12].grid(column=5, row=0)
 	itemList[-1][12].grid_remove()
 
-	itemList[-1].append(ttk.Label(itemList[-1][0], text="woasdfkasdhflkjashdlkfhlkajsfw", style="error.TLabel"))
+	itemList[-1].append(ttk.Label(itemList[-1][0], style="error.TLabel"))
 	itemList[-1][13].grid(column=0, row=1, columnspan=4)
 	itemList[-1][13].grid_remove()
 
@@ -195,7 +195,7 @@ def submitEdit(frameID):
 
 # item entry
 # open item entry
-def openItemEntry():
+def openDataEntry():
 	for i in range(4):
 		itemData[-1][i].set("")
 	addItem.grid_remove()
@@ -203,21 +203,21 @@ def openItemEntry():
 	cancelItem.grid()
 	submitItem.grid()
 	inputError.grid_remove()
-	root.bind("<Return>", lambda event: submitItemEntry())
-	root.bind("<Escape>", lambda event: closeItemEntry())
+	root.bind("<Return>", lambda event: submitDataEntry())
+	root.bind("<Escape>", lambda event: closeDataEntry())
 
 # close item entry
-def closeItemEntry():
+def closeDataEntry():
 	addItem.grid()
 	listItem.grid_remove()
 	cancelItem.grid_remove()
 	submitItem.grid_remove()
 	inputError.grid_remove()
-	root.bind("<Return>", lambda event: openItemEntry())
+	root.bind("<Return>", lambda event: openDataEntry())
 	root.unbind("<Escape>")
 
 # create next list for data, close item entry and create frame
-def submitItemEntry():
+def submitDataEntry():
 	valid = validateData(-1, 0)
 	if valid == 0:
 		itemData.append([StringVar(), StringVar(), StringVar(), StringVar()])
@@ -231,7 +231,7 @@ def submitItemEntry():
 		submitItem.grid_remove()
 		inputError.grid_remove()
 		mkFrame()
-		root.bind("<Return>", lambda event: openItemEntry())
+		root.bind("<Return>", lambda event: openDataEntry())
 		root.unbind("<Escape>")
 	else:
 		addItemError(inputError, valid)
@@ -314,18 +314,34 @@ itemData = [[StringVar(), StringVar(), StringVar(), StringVar()]]
 s = ttk.Style()
 s.theme_use("clam")
 s.configure("error.TLabel", foreground="red")
+s.configure("TButton", focuscolor="none")
 s.configure(
 	"delete.TButton",
-	background="red",
-	bordercolor="red",
-	lightcolor="red",
-	darkcolor="red",
+	background="#ee0000",
+	bordercolor="#cc0000",
+	lightcolor="#ff4242",
+	darkcolor="#dd0000",
 	focuscolor="none"
 )
 s.map(
 	"delete.TButton",
-	background=[("pressed", "red"), ("active", "red")],
-	borderwidth=[("active", 0)],
+	background=[("pressed", "#dd0000"), ("active", "#ff4242")],
+	lightcolor=[("pressed", "#dd0000")],
+	darkcolor=[("pressed", "#dd0000")]
+)
+s.configure(
+	"submit.TButton",
+	background="#00ee00",
+	bordercolor="#00cc00",
+	lightcolor="#60ff60",
+	darkcolor="#00dd00",
+	focuscolor="none"
+)
+s.map(
+	"submit.TButton",
+	background=[("pressed", "#00dd00"), ("active", "#60ff60")],
+	lightcolor=[("pressed", "#00dd00")],
+	darkcolor=[("pressed", "#00dd00")]
 )
 
 
@@ -379,7 +395,7 @@ addItem = ttk.Button(
 	itemEntryFrame,
 	text="Add item",
 	padding="10 10 10 10",
-	command=openItemEntry
+	command=openDataEntry
 )
 addItem.grid(column=0, row=0, sticky=EW, columnspan=2, padx=3, pady=3)
 
@@ -413,7 +429,7 @@ cancelItem = ttk.Button(
 	itemEntryFrame,
 	text="Cancel",
 	padding="10 10 10 10",
-	command=closeItemEntry
+	command=closeDataEntry
 )
 cancelItem.grid(column=0, row=1, sticky=EW, padx=3, pady=3)
 cancelItem.grid_remove()
@@ -422,12 +438,13 @@ submitItem = ttk.Button(
 	itemEntryFrame,
 	text="Submit",
 	padding="10 10 10 10",
-	command=submitItemEntry
+	style="submit.TButton",
+	command=submitDataEntry
 )
 submitItem.grid(column=1, row=1, sticky=EW, padx=3, pady=3)
 submitItem.grid_remove()
 
-root.bind("<Return>", lambda event: openItemEntry())
+root.bind("<Return>", lambda event: openDataEntry())
 
 
 root.mainloop()
