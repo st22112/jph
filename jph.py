@@ -320,7 +320,7 @@ def addInvalidCommandSubmit(error):
 
 root = Tk()
 root.geometry("900x700")
-# root.resizable(False, False)
+root.title("Julie’s Party Hire")
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
