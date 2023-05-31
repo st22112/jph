@@ -131,10 +131,10 @@ def mkFrame():
 	# witchery for invalidcommand
 	def editInvalidCommandSubmit(error):
 		addItemError(itemList[-1][13], int(error))
-	itemList[-1][7]["invalidcommand"] = (itemList[-1][10].register(errorSubmit), 6)
-	itemList[-1][8]["invalidcommand"] = (itemList[-1][10].register(errorSubmit), 7)
-	itemList[-1][9]["invalidcommand"] = (itemList[-1][10].register(errorSubmit), 8)
-	itemList[-1][10]["invalidcommand"] = (itemList[-1][10].register(errorSubmit), 9)
+	itemList[-1][7]["invalidcommand"] = (itemList[-1][10].register(editInvalidCommandSubmit), 6)
+	itemList[-1][8]["invalidcommand"] = (itemList[-1][10].register(editInvalidCommandSubmit), 7)
+	itemList[-1][9]["invalidcommand"] = (itemList[-1][10].register(editInvalidCommandSubmit), 8)
+	itemList[-1][10]["invalidcommand"] = (itemList[-1][10].register(editInvalidCommandSubmit), 9)
 
 # remove frame for item
 def rmFrame(frameID):
