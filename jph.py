@@ -120,7 +120,7 @@ def mkFrame():
 	itemList[-1][11].grid(column=4, row=0, padx=6)
 	itemList[-1][11].grid_remove()
 
-	itemList[-1].append(ttk.Button(itemList[-1][0], text="\u2713", width=3, command=lambda: submitEdit(frameID)))
+	itemList[-1].append(ttk.Button(itemList[-1][0], text="\u2713", width=3, style="submit.TButton", command=lambda: submitEdit(frameID)))
 	itemList[-1][12].grid(column=5, row=0)
 	itemList[-1][12].grid_remove()
 
